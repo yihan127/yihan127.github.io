@@ -1,0 +1,13 @@
+---
+title: "Home"
+author: "Yihan Zhou"
+output: html_document
+
+---
+
+## **Welcome to Yihan's Website!** ##
+
+Hi, this is Yihan Zhou, a second-year Analytics graduate student from Georgetown University.
+
+Here is my online portfolio of Analytical Data Visualization course, which includes the assignments did before and the final project about FIFA analysis.
+

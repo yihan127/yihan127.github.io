@@ -1,0 +1,344 @@
+---
+title: "Assignment"
+output:
+  html_document:
+    df_print: paged
+  flexdashboard::flex_dashboard:
+    theme: bootstrap
+    orientation: row
+    vertical_layout: scroll
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+```
+
+Task 1 {data-navmenu="Assignment 5"}
+==================
+
+Inputs {.sidebar}
+------------------------------------- 
+
+ - From the graphs right, it is found that most accounts have not credit card.
+ 
+ - Most accounts have no loan.
+ 
+ - The average balance for accounts is between 0 and 5000.
+
+
+```{r, include=FALSE}
+account=read_csv('/Users/zhouyihan/Desktop/503 A5/data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+account = account %>%
+  mutate(average_balance = apply(account[,15:16], 1, mean))
+
+account$credit_cards = account$credit_cards %>%
+                       replace_na(0)
+account$loan_amount = account$loan_amount %>%
+                      replace_na(0)
+#drop NA
+account = account %>%
+          mutate(have_credit = if_else(credit_cards >0, true = 'T',false = 'F')) %>%
+          mutate(have_loan = if_else(loan_amount >0,true = 'T',false = 'F'))
+```
+
+Row
+-------------------------------------
+
+### Task 1 Chart 1
+```{r, echo=FALSE}
+account %>%
+  ggplot() +
+  geom_point(aes(x=account_id,
+                y=average_balance,color=have_credit,shape=have_loan),
+           stat =  "identity") +
+  facet_wrap(~have_loan,labeller=labeller(have_loan=c(T='have loan',F='no loan')))+
+  labs(title = "The Scatter Plot of Average Balance of Different Accounts") +
+  xlab("Account_id") +
+  ylab("Average Balance")
+```
+
+### Task 1 Chart 2
+```{r, echo=FALSE}
+account %>%
+  ggplot() +
+  geom_histogram(aes(x=average_balance,fill=have_credit),bins=50,position="stack")+
+  facet_wrap(~have_loan,labeller=labeller(have_loan=c(T='have loan',F='no loan')))+
+  labs(title = "Distribution of Average balance of accounts") +
+  xlab('Average Balance') +
+  ylab("Count")
+```
+
+
+Task 2 {data-navmenu="Assignment 5"}
+==================
+
+Inputs {.sidebar}
+-------------------------------------
+
+ - From the left plot, we can see most loan are in current status in stead of expired status and accounts that has been default is the majority.
+
+ - The box plot on the right could show the relationship between loan amount and loan term. The result is that the longer loan term, the larger loan amount. And the account with default loan always has a larger loan amount than good loan.
+
+```{r, include=FALSE}
+library(tidyverse)
+library(RColorBrewer)
+account=read_csv('/Users/zhouyihan/Desktop/503 A5/data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+#drop NA in loan_amout
+account1 = account %>%
+          filter(!is.na(loan_amount))
+```
+
+Row
+-------------------------------------
+
+### Task 2 Chart 1
+
+```{r, echo=FALSE}
+account1 %>%
+  ggplot() +
+  geom_histogram(aes(x=loan_amount,fill=loan_status),bins=30)+
+  facet_wrap(~loan_default,labeller=labeller(loan_default=c('TRUE'='default_true','FALSE'='default_false'))) +
+  theme_bw() +
+  labs(title = "Distribution of Loan_amount") +
+  xlab("Loan_amount") +
+  ylab("Count")
+```
+
+
+### Task 2 Chart 2
+
+```{r, echo=FALSE}
+account1 %>%
+  ggplot() +
+  geom_boxplot(aes(x=factor(loan_term),y=loan_amount,fill=loan_default))+
+  theme_bw() +
+  labs(title = "Boxplot of Loan amount and loan term") +
+  xlab("Loan_term") +
+  ylab("Loan_amount")
+```
+
+
+Task 3 {data-navmenu="Assignment 5"}
+==================
+
+Inputs {.sidebar}
+-------------------------------------
+
+ - From the left box plot, the time between an account is opened and the loan is created for a bad is longer than a good loan that is not default.
+ 
+ - The right box plot shows that the higher loan payment has a higher risk in defaulting.
+
+```{r, include=FALSE}
+library(tidyverse)
+library(RColorBrewer)
+account=read_csv('/Users/zhouyihan/Desktop/503 A5/data/accounts_analytical.csv')
+```
+
+```{r, include=FALSE}
+account1 = account %>%
+          filter(!is.na(loan_amount))
+```
+
+Row
+-------------------------------------
+
+### Task 3 Chart 1
+
+```{r, echo=FALSE}
+account1 %>%
+  mutate(d_date = loan_date - acct_creation_date) %>%
+  ggplot() +
+  geom_boxplot(aes(x=loan_default,y=d_date),width=0.5,fill=brewer.pal(7, "Set3")[1])+
+  labs(title = "Boxplot of time and loandefault") +
+  xlab("Loan_default") +
+  ylab("Time")
+```
+
+### Task 3 Chart 2
+
+```{r, echo =FALSE}
+account1 %>%
+  ggplot() +
+  geom_boxplot(aes(x=loan_default,y=loan_payment),width=0.5, fill=brewer.pal(7, "Set3")[2])+
+  labs(title = "Boxplot of loan payment and loan default") +
+  xlab("Loan_default") +
+  ylab("Loan_payment")
+```
+
+Task 4 {data-navmenu="Assignment 5"}
+==================
+
+
+
+```{r, include=FALSE}
+library(tidyverse)
+library(RColorBrewer)
+account=read_csv('/Users/zhouyihan/Desktop/503 A5/data/accounts_analytical.csv')
+transactions= read_csv('/Users/zhouyihan/Desktop/503 A5/data/transactions.csv')
+```
+
+```{r, include=FALSE}
+#get the account with the highest number of transactions
+num =as.data.frame(table(transactions$account_id))
+num = num[which(num$Freq == max(num$Freq)),]
+transactions1 = transactions[transactions$account_id == num$Var1,]
+```
+
+Row
+-------------------------------------
+
+### Task 4 Chart 1
+```{r, echo=FALSE}
+#time series plot
+transactions1 %>%
+  ggplot()+
+  geom_line(aes(x=date,y=amount))+
+  labs(title = "Time series plot of the account with highest number of transactions") +
+  xlab("Date") +
+  ylab("Amount")+
+  theme(plot.title = element_text (hjust = 0.5),
+        axis.text.x = element_text(hjust=1))
+```
+
+
+### Task 4 Chart 2
+```{r, echo=FALSE}
+#credits and debits
+transactions1 %>%
+  ggplot()+
+  geom_line(aes(x=date,y=amount))+
+  labs(title = "Different type accounts with highest number of transactions") +
+  facet_wrap(~type)+
+  xlab("Date") +
+  ylab("Amount")+
+  theme(plot.title = element_text (hjust = 0.5),
+        axis.text.x = element_text(hjust=1))
+```
+
+
+Row
+-------------------------------------
+### Task 4 Chart 3
+
+```{r, echo=FALSE}
+#different methods
+transactions1 %>%
+  ggplot()+
+  geom_line(aes(x=date,y=amount))+
+  labs(title = "Time series plot of the account with highest number of transactions") +
+  facet_wrap(~method)+
+  xlab("Date") +
+  ylab("Amount")+
+  theme(plot.title = element_text (hjust = 0.5),
+        axis.text.x = element_text(hjust=1))
+```
+
+
+### Task 4 Chart 4
+```{r, echo=FALSE}
+#with different categories
+transactions1 %>%
+  ggplot()+
+  geom_line(aes(x=date,y=amount))+
+  labs(title = "Time series plot of the account with highest number of transactions") +
+  facet_wrap(~category)+
+  xlab("Date") +
+  ylab("Amount")+
+  theme(plot.title = element_text (hjust = 0.5),
+        axis.text.x = element_text(hjust=1))
+```
+
+Assignment 6
+==================
+
+
+Assignment 7
+==================
+
+```{r, include=FALSE}
+library(data.table)
+library(dplyr)
+library(tidyr)
+library(igraph)
+library(circlize)
+```
+
+```{r,include=FALSE}
+library(RColorBrewer)
+```
+
+```{r, include=FALSE}
+df = readxl::read_excel('/Users/zhouyihan/Desktop/2020 Fall/503 visualization/503 A7/State_to_State_Migrations_Table_2018.xls')[c(6:43,48:78),]
+```
+
+```{r, include=FALSE}
+df <- df[,10:ncol(df)] 
+df <- transpose(df)
+
+#delete NAs
+df <- df[,colSums(is.na(df)) < nrow(df)]
+df <- as.data.frame(df)
+target <- df[3,]
+
+#delete MOE data
+df1 <- filter(df, V2 != "MOE")
+
+#change column names
+df1 <- rbind(target,df1)
+header.true <- function(df) {
+  names(df) <- as.character(unlist(df[1,]))
+  df[-1,]
+}
+df1 <- header.true(df1)
+df1 <- df1[,-2]
+names(df1)[1] <- "source"
+
+df1 <- df1[, !(colnames(df1) %in% c("Footnotes:","United States2"))]
+```
+
+```{r, include=FALSE}
+df2 <- df1 %>% 
+  filter(source %in% c('Texas','New York','Ohio','District of Columbia')) %>%
+  gather(target, count, -source) %>%
+  filter(!is.na(count))
+
+df2$count <- as.numeric(as.character(df2$count))
+```
+
+```{r, include=FALSE}
+library(rlang)
+library(dplyr)
+```
+
+```{r, include=FALSE}
+links <- df2 %>% group_by(source) %>% slice_max(order_by = count, n = 10)
+links[links$source == 'Texas',]
+```
+
+```{r, echo=FALSE}
+net <- graph_from_data_frame(d = links, vertices = unique(c(links$source, links$target)), directed = T)
+
+
+chordDiagram(links, annotationTrack = "grid", preAllocateTracks = list(track.height = 0.1))
+  circos.trackPlotRegion(track.index = 1, panel.fun = function(x, y) {
+  col = rand_color(50,luminosity = "bright")
+  xlim = get.cell.meta.data("xlim")
+  xplot = get.cell.meta.data("xplot")
+  ylim = get.cell.meta.data("ylim")
+  sector.name = get.cell.meta.data("sector.index")
+  circos.text(mean(xlim), ylim[1], sector.name, facing = "clockwise",
+                niceFacing = TRUE, adj = c(0, 0.5), cex = 0.5)
+}, bg.border = NA)
+ 
+title("The Flow of People of USA in 2018",cex = 0.1)
+```
