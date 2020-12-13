@@ -136,7 +136,7 @@ Inputs {.sidebar}
  
  - The bottom left line graph indicates the relationship between players' age and value. From 15 to 26, the relationship is proportional which means that the more older player are, the higher value. However, after 30-year-old, the relationship is inversely proportional. As a result, 25 to 30 is the golden age for football players.
  
- - The bottom right histogram shows the salary condition in top 10 paid teams. The top two are Real Madrid CF and FC Barcelona. 
+ - The bottom right histogram counts the number of champion won by each country in the Worldcup from 1930 to 2014. We can see that Brazil won championships five times and is firmly ranked first. The second is Italy who won four times. And the third place is Germany.
  
    
 Row 
@@ -159,7 +159,8 @@ Row
 
 ### Chart 4
 
-<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/graph8.png?raw=true">
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/top10_winner_count.png?raw=true">
+
 
 Geographical Visualization
 =====================================     
@@ -173,7 +174,6 @@ Inputs {.sidebar}
 Row
 -------------------------------------
 
-
 ### Chart 1 
 
 <img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/graph7.png?raw=true">
@@ -184,13 +184,15 @@ Network
 Inputs {.sidebar}
 -------------------------------------
 
-3333
+ - The network plot shows competition history between many national teams. 
 
 
 Row
 -------------------------------------
 
-### Chart 1
+### Teammatch Plot
+
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/worldcup_teammatch.png?raw=true">
 
 
 Time Series
@@ -198,13 +200,16 @@ Time Series
 Inputs {.sidebar}
 -------------------------------------
 
- 4444
+ - The plot shows the sum of goals scored trend via year in the WorldCup. The blue line represents home team and the red represents away team. Before 2010, the home team scored more goals. However, after 2010, the home court advantage seesm not as obvious as before.
 
 
 
 Row
 -------------------------------------
-### Chart 1
+### Goals scored via year
+
+
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/goals scored.png?raw=true">
 
 
 
