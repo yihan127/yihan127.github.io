@@ -1,7 +1,7 @@
-name: "Yihan Zhou"                                # CHANGE HERE 
+name: "Yihan Zhou"                                
 output_dir: "."
 navbar:
-  title: "Portfolio of Yihan Zhou"                             # CHANGE HERE 
+  title: "Portfolio of Yihan Zhou"                             
   type: inverse
   left:
     - text: "Home"
