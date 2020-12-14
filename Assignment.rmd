@@ -261,6 +261,20 @@ transactions1 %>%
 Assignment 6
 ==================
 
+Row
+-------------------------------------
+
+### Chart1
+
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/CA.png?raw=true">
+
+### Chart2
+
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/Texas.png?raw=true">
+
+### Chart3
+
+<img src="https://github.com/yihan127/yihan127.github.io/blob/main/graph/PA.png?raw=true">
 
 
 Assignment 7
